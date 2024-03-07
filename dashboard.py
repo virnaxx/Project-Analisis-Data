@@ -79,8 +79,11 @@ with st.sidebar:
         value=[min_date, max_date]
     )
 
-main_df = all_df[(all_df["order_purchase_timestamp"] >= str(start_date)) & 
-                (all_df["order_purchase_timestamp"] <= str(end_date))]
+start_date = pd.to_datetime(start_date)
+end_date = pd.to_datetime(end_date)
+
+main_df = all_df[(all_df["order_purchase_timestamp"] >= start_date) & 
+                (all_df["order_purchase_timestamp"] <= end_date)]
 
 daily_orders = create_daily_orders(main_df)
 sum_order_items = create_sum_order_items(main_df)
@@ -159,33 +162,32 @@ fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(35, 15))
 colors = ["#90CAF9", "#90CAF9", "#90CAF9", "#90CAF9", "#90CAF9"]
  
 # Barplot untuk Recency
-rfm_df_recency = rfm_df.sort_values(by="recency", ascending=True).head(5)
-ax[0].bar(rfm_df_recency["customer_id"], rfm_df_recency["recency"], color=colors)
+sns.barplot(y="recency", x="customer_id", data=rfm_df.sort_values(by="recency", ascending=True).head(5), palette=colors, ax=ax[0])
 ax[0].set_ylabel(None)
 ax[0].set_xlabel("customer_id", fontsize=30)
 ax[0].set_title("By Recency (days)", loc="center", fontsize=50)
 ax[0].tick_params(axis='y', labelsize=30)
 ax[0].tick_params(axis='x', labelsize=35)
-ax[0].set_xticklabels(ax[0].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
+#ax[0].set_xticklabels(ax[0].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 # Barplot untuk Frequency
-rfm_df_frequency = rfm_df.sort_values(by="frequency", ascending=False).head(5)
-ax[1].bar(rfm_df_frequency["customer_id"], rfm_df_frequency["frequency"], color=colors)
+sns.barplot(y="frequency", x="customer_id", data=rfm_df.sort_values(by="frequency", ascending=False).head(5), palette=colors, ax=ax[1])
 ax[1].set_ylabel(None)
 ax[1].set_xlabel("customer_id", fontsize=30)
 ax[1].set_title("By Frequency", loc="center", fontsize=50)
 ax[1].tick_params(axis='y', labelsize=30)
 ax[1].tick_params(axis='x', labelsize=35)
-ax[1].set_xticklabels(ax[1].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
+#ax[1].set_xticklabels(ax[1].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 # Barplot untuk Monetary
-rfm_df_monetary = rfm_df.sort_values(by="monetary", ascending=False).head(5)
-ax[2].bar(rfm_df_monetary["customer_id"], rfm_df_monetary["monetary"], color=colors)
+sns.barplot(y="monetary", x="customer_id", data=rfm_df.sort_values(by="monetary", ascending=False).head(5), palette=colors, ax=ax[2])
 ax[2].set_ylabel(None)
 ax[2].set_xlabel("customer_id", fontsize=30)
 ax[2].set_title("By Monetary", loc="center", fontsize=50)
 ax[2].tick_params(axis='y', labelsize=30)
 ax[2].tick_params(axis='x', labelsize=35)
-ax[2].set_xticklabels(ax[2].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
+#ax[2].set_xticklabels(ax[2].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 st.pyplot(fig)
+ 
+# st.caption('Copyright (c) Dicoding 2023')
