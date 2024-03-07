@@ -11,6 +11,7 @@ from babel.numbers import format_currency
 # Memperbarui lokasi file 'all_data.csv'
 sns.set(style='dark')
 
+
 def create_daily_orders(df):
     daily_orders = df.resample(rule='D', on='order_purchase_timestamp').agg({
         "order_id": "nunique",
@@ -53,9 +54,9 @@ def create_rfm_df(df):
 
 all_df = pd.read_csv("all_data.csv")
 #all_df = pd.read_csv(os.path.join(current_directory, "all_data.csv"))
-
 all_df['order_purchase_timestamp'] = pd.to_datetime(all_df['order_purchase_timestamp'])
 all_df['order_delivered_customer_date'] = pd.to_datetime(all_df['order_delivered_customer_date'])
+all_df.set_index('order_purchase_timestamp', inplace=True)
 
 datetime_columns = ["order_purchase_timestamp", "delivery_time"]
 all_df.sort_values(by="order_purchase_timestamp", inplace=True)
@@ -168,7 +169,7 @@ ax[0].set_xlabel("customer_id", fontsize=30)
 ax[0].set_title("By Recency (days)", loc="center", fontsize=50)
 ax[0].tick_params(axis='y', labelsize=30)
 ax[0].tick_params(axis='x', labelsize=35)
-#ax[0].set_xticklabels(ax[0].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
+ax[0].set_xticklabels(ax[0].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 # Barplot untuk Frequency
 sns.barplot(y="frequency", x="customer_id", data=rfm_df.sort_values(by="frequency", ascending=False).head(5), palette=colors, ax=ax[1])
@@ -177,7 +178,7 @@ ax[1].set_xlabel("customer_id", fontsize=30)
 ax[1].set_title("By Frequency", loc="center", fontsize=50)
 ax[1].tick_params(axis='y', labelsize=30)
 ax[1].tick_params(axis='x', labelsize=35)
-#ax[1].set_xticklabels(ax[1].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
+ax[1].set_xticklabels(ax[1].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 # Barplot untuk Monetary
 sns.barplot(y="monetary", x="customer_id", data=rfm_df.sort_values(by="monetary", ascending=False).head(5), palette=colors, ax=ax[2])
@@ -186,7 +187,7 @@ ax[2].set_xlabel("customer_id", fontsize=30)
 ax[2].set_title("By Monetary", loc="center", fontsize=50)
 ax[2].tick_params(axis='y', labelsize=30)
 ax[2].tick_params(axis='x', labelsize=35)
-#ax[2].set_xticklabels(ax[2].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
+ax[2].set_xticklabels(ax[2].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 st.pyplot(fig)
  
