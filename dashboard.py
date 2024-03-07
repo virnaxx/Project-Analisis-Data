@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 from babel.numbers import format_currency
+#import os
+
+# Mendapatkan direktori kerja saat ini
+#current_directory = os.getcwd()
+
+# Memperbarui lokasi file 'all_data.csv'
 sns.set(style='dark')
 
 def create_daily_orders(df):
@@ -46,6 +52,7 @@ def create_rfm_df(df):
     return rfm_df
 
 all_df = pd.read_csv("all_data.csv")
+#all_df = pd.read_csv(os.path.join(current_directory, "all_data.csv"))
 
 all_df['order_purchase_timestamp'] = pd.to_datetime(all_df['order_purchase_timestamp'])
 all_df['order_delivered_customer_date'] = pd.to_datetime(all_df['order_delivered_customer_date'])
@@ -152,7 +159,8 @@ fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(35, 15))
 colors = ["#90CAF9", "#90CAF9", "#90CAF9", "#90CAF9", "#90CAF9"]
  
 # Barplot untuk Recency
-sns.barplot(y="recency", x="customer_id", data=rfm_df.sort_values(by="recency", ascending=True).head(5), palette=colors, ax=ax[0])
+rfm_df_recency = rfm_df.sort_values(by="recency", ascending=True).head(5)
+ax[0].bar(rfm_df_recency["customer_id"], rfm_df_recency["recency"], color=colors)
 ax[0].set_ylabel(None)
 ax[0].set_xlabel("customer_id", fontsize=30)
 ax[0].set_title("By Recency (days)", loc="center", fontsize=50)
@@ -161,7 +169,8 @@ ax[0].tick_params(axis='x', labelsize=35)
 ax[0].set_xticklabels(ax[0].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 # Barplot untuk Frequency
-sns.barplot(y="frequency", x="customer_id", data=rfm_df.sort_values(by="frequency", ascending=False).head(5), palette=colors, ax=ax[1])
+rfm_df_frequency = rfm_df.sort_values(by="frequency", ascending=False).head(5)
+ax[1].bar(rfm_df_frequency["customer_id"], rfm_df_frequency["frequency"], color=colors)
 ax[1].set_ylabel(None)
 ax[1].set_xlabel("customer_id", fontsize=30)
 ax[1].set_title("By Frequency", loc="center", fontsize=50)
@@ -170,7 +179,8 @@ ax[1].tick_params(axis='x', labelsize=35)
 ax[1].set_xticklabels(ax[1].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 # Barplot untuk Monetary
-sns.barplot(y="monetary", x="customer_id", data=rfm_df.sort_values(by="monetary", ascending=False).head(5), palette=colors, ax=ax[2])
+rfm_df_monetary = rfm_df.sort_values(by="monetary", ascending=False).head(5)
+ax[2].bar(rfm_df_monetary["customer_id"], rfm_df_monetary["monetary"], color=colors)
 ax[2].set_ylabel(None)
 ax[2].set_xlabel("customer_id", fontsize=30)
 ax[2].set_title("By Monetary", loc="center", fontsize=50)
@@ -179,5 +189,3 @@ ax[2].tick_params(axis='x', labelsize=35)
 ax[2].set_xticklabels(ax[2].get_xticklabels(), rotation=45, ha='right')  # Memiringkan label
 
 st.pyplot(fig)
- 
-# st.caption('Copyright (c) Dicoding 2023')
